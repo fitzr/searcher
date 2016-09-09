@@ -4,7 +4,7 @@ import "io"
 
 const (
 	topBit     = 128
-	byteMaxLen = 8+1
+	byteMaxLen = 8 + 1
 )
 
 func Encode(w io.Writer, n int) error {
