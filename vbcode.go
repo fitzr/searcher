@@ -4,10 +4,10 @@ import "io"
 
 const (
 	topBit     = 128
-	byteMaxLen = 10
+	byteMaxLen = 8+1
 )
 
-func Encode(w io.Writer, n uint64) error {
+func Encode(w io.Writer, n int) error {
 	bytes := [byteMaxLen]byte{}
 	i := byteMaxLen - 1
 	for {
@@ -23,14 +23,14 @@ func Encode(w io.Writer, n uint64) error {
 	return err
 }
 
-func Decode(r io.Reader) (n uint64, err error) {
+func Decode(r io.Reader) (n int, err error) {
 	b := make([]byte, 1)
 	for {
 		_, err = r.Read(b)
 		if err != nil {
 			return
 		}
-		v := uint64(b[0])
+		v := int(b[0])
 		if v < topBit {
 			n = n*topBit + v
 		} else {

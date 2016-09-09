@@ -8,7 +8,7 @@ import (
 )
 
 func TestEncodeOneByte(t *testing.T) {
-	input := uint64(5)
+	input := int(5)
 	buff := new(bytes.Buffer)
 	expected := []byte{5 + 128}
 
@@ -23,7 +23,7 @@ func TestEncodeOneByte(t *testing.T) {
 }
 
 func TestEncodeTwoByte(t *testing.T) {
-	input := uint64(130)
+	input := int(130)
 	buff := new(bytes.Buffer)
 	expected := []byte{1, 2 + 128}
 
@@ -38,9 +38,9 @@ func TestEncodeTwoByte(t *testing.T) {
 }
 
 func TestEncodeInt64Max(t *testing.T) {
-	input := uint64(math.MaxUint64)
+	input := int(math.MaxInt64)
 	buff := new(bytes.Buffer)
-	expected := []byte{1, 127, 127, 127, 127, 127, 127, 127, 127, 255}
+	expected := []byte{127, 127, 127, 127, 127, 127, 127, 127, 255}
 
 	err := Encode(buff, input)
 
@@ -53,7 +53,7 @@ func TestEncodeInt64Max(t *testing.T) {
 }
 
 func TestEncodeZero(t *testing.T) {
-	input := uint64(0)
+	input := int(0)
 	buff := new(bytes.Buffer)
 	expected := []byte{128}
 
@@ -69,7 +69,7 @@ func TestEncodeZero(t *testing.T) {
 
 func TestDecodeOneByte(t *testing.T) {
 	input := bytes.NewReader([]byte{5 + 128})
-	expected := uint64(5)
+	expected := int(5)
 
 	actual, err := Decode(input)
 
@@ -83,7 +83,7 @@ func TestDecodeOneByte(t *testing.T) {
 
 func TestDecodeTwoByte(t *testing.T) {
 	input := bytes.NewReader([]byte{1, 2 + 128})
-	expected := uint64(130)
+	expected := int(130)
 
 	actual, err := Decode(input)
 
@@ -96,8 +96,8 @@ func TestDecodeTwoByte(t *testing.T) {
 }
 
 func TestDecodeInt64Max(t *testing.T) {
-	input := bytes.NewReader([]byte{1, 127, 127, 127, 127, 127, 127, 127, 127, 255})
-	expected := uint64(math.MaxUint64)
+	input := bytes.NewReader([]byte{127, 127, 127, 127, 127, 127, 127, 127, 255})
+	expected := int(math.MaxInt64)
 
 	actual, err := Decode(input)
 
@@ -111,7 +111,7 @@ func TestDecodeInt64Max(t *testing.T) {
 
 func TestDecodeZero(t *testing.T) {
 	input := bytes.NewReader([]byte{128})
-	expected := uint64(0)
+	expected := int(0)
 
 	actual, err := Decode(input)
 
@@ -125,7 +125,7 @@ func TestDecodeZero(t *testing.T) {
 
 func TestDecodeEOF(t *testing.T) {
 	input := bytes.NewReader([]byte{10})
-	expected := uint64(10)
+	expected := int(10)
 
 	actual, err := Decode(input)
 
