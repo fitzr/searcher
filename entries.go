@@ -7,40 +7,40 @@ import (
 	"strings"
 )
 
-type entry struct {
-	id       int
-	category int
-	url      string
-	title    string
+type Entry struct {
+	Id       int
+	Category int
+	Url      string
+	Title    string
 }
 
-func readEntries(filePath string) map[int]*entry {
+func readEntries(filePath string) *map[int]*Entry {
 	fp, err := os.Open(filePath)
 	check(err)
 	defer fp.Close()
 	scanner := bufio.NewScanner(fp)
 
-	entries := map[int]*entry{}
+	entries := map[int]*Entry{}
 	for scanner.Scan() {
 		entry := toEntry(scanner.Text())
-		entries[entry.id] = entry
+		entries[entry.Id] = entry
 	}
 	check(scanner.Err())
 
-	return entries
+	return &entries
 }
 
-func toEntry(s string) *entry {
+func toEntry(s string) *Entry {
 	texts := strings.Split(s, "\t")
 	id, err := strconv.Atoi(texts[0])
 	check(err)
 	category, err := strconv.Atoi(texts[1])
 	check(err)
-	return &entry{
-		id:       id,
-		category: category,
-		url:      texts[2],
-		title:    texts[3]}
+	return &Entry{
+		Id:       id,
+		Category: category,
+		Url:      texts[2],
+		Title:    texts[3]}
 }
 
 func check(err error) {
