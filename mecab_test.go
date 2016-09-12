@@ -10,6 +10,7 @@ func TestIndex(t *testing.T) {
 	expected := []string{"もう", "眠い"}
 
 	sut := newMeCab()
+	defer sut.destroy()
 	actual := sut.parse(input)
 
 	if !reflect.DeepEqual(expected, actual) {

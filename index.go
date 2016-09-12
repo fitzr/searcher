@@ -2,48 +2,41 @@ package searcher
 
 import (
 	"bytes"
-	"github.com/deckarep/golang-set"
 	"sort"
 )
 
 const indexMax = 50
 
 type indexBuilder struct {
-	wordMap map[string]mapset.Set
+	wordMap map[string][]int
 }
 
 func newIndexBuilder() *indexBuilder {
-	b := &indexBuilder{wordMap: make(map[string]mapset.Set)}
+	b := &indexBuilder{wordMap: make(map[string][]int)}
 	return b
 }
 
-// called parallel
 func (b *indexBuilder) put(id int, words []string) {
 	for _, w := range words {
 		v, ok := b.wordMap[w]
-		if !ok {
-			v = mapset.NewThreadUnsafeSet()
-			b.wordMap[w] = v
+		if ok {
+			b.wordMap[w] = append(v, id)
+		} else {
+			b.wordMap[w] = []int{id}
 		}
-		v.Add(id)
 	}
 }
 
 func (b *indexBuilder) build() map[string][]byte {
 	index := map[string][]byte{}
 	for k, v := range b.wordMap {
-		index[k] = createIndex(v)
+		index[k] = encodeIndex(v)
 	}
 	return index
 }
 
-func createIndex(set mapset.Set) []byte {
-	slice := set.ToSlice()
-	ids := make([]int, len(slice))
-	for i, id := range slice {
-		ids[i] = id.(int)
-	}
-
+func encodeIndex(ids []int) []byte {
+	ids = deduplicate(ids)
 	sort.Sort(sort.Reverse(sort.IntSlice(ids)))
 	if len(ids) > indexMax {
 		ids = ids[:indexMax]
@@ -56,6 +49,20 @@ func createIndex(set mapset.Set) []byte {
 	}
 
 	return buff.Bytes()
+}
+
+func deduplicate(ids []int) []int {
+	m := map[int]struct{}{}
+	for _, id := range ids {
+		m[id] = struct{}{}
+	}
+	ids = make([]int, len(m))
+	i := 0
+	for k := range m {
+		ids[i] = k
+		i++
+	}
+	return ids
 }
 
 func decodeIndex(b []byte) (ids []int) {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/fitzr/searcher"
 	"os"
+	"time"
 )
 
 const (
@@ -14,12 +15,17 @@ const (
 
 func main() {
 
-	sc := bufio.NewScanner(os.Stdin)
+	fmt.Println("load data ...")
 
+	t1 := time.Now()
 	searcher := searcher.NewSearcher(entries, texts)
+	t2 := time.Now()
 
-	fmt.Println("\nsearch >")
+	fmt.Printf("load finished ... %.3f(s)", t2.Sub(t1).Seconds())
 
+	fmt.Println("\n\nsearch >")
+
+	sc := bufio.NewScanner(os.Stdin)
 	for sc.Scan() {
 		t := sc.Text()
 

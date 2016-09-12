@@ -7,7 +7,6 @@ import (
 
 type mecabParser struct {
 	model  mecab.Model
-	tagger mecab.MeCab
 }
 
 func newMeCab() *mecabParser {
@@ -20,7 +19,6 @@ func newMeCab() *mecabParser {
 }
 
 func (m *mecabParser) destroy() {
-	m.tagger.Destroy()
 	m.model.Destroy()
 }
 
