@@ -3,35 +3,30 @@ package searcher
 import (
 	"bytes"
 	"sort"
-	"sync"
+	"github.com/deckarep/golang-set"
 )
 
 const indexMax = 50
 
 type indexBuilder struct {
-	wordMap map[string][]int
-	mu      sync.Mutex
+	wordMap map[string]mapset.Set
 }
 
 func newIndexBuilder() *indexBuilder {
-	b := &indexBuilder{
-		wordMap: make(map[string][]int),
-		mu:      sync.Mutex{}}
+	b := &indexBuilder{wordMap: make(map[string]mapset.Set)}
 	return b
 }
 
 // called parallel
 func (b *indexBuilder) put(id int, words []string) {
-	b.mu.Lock()
 	for _, w := range words {
 		v, ok := b.wordMap[w]
-		if ok {
-			b.wordMap[w] = append(v, id)
-		} else {
-			b.wordMap[w] = []int{id}
+		if !ok {
+			v = mapset.NewThreadUnsafeSet()
+			b.wordMap[w] = v
 		}
+		v.Add(id)
 	}
-	b.mu.Unlock()
 }
 
 func (b *indexBuilder) build() map[string][]byte {
@@ -42,7 +37,13 @@ func (b *indexBuilder) build() map[string][]byte {
 	return index
 }
 
-func createIndex(ids []int) []byte {
+func createIndex(set mapset.Set) []byte {
+	slice := set.ToSlice()
+	ids := make([]int, len(slice))
+	for i, id := range slice {
+		ids[i] = id.(int)
+	}
+
 	sort.Sort(sort.Reverse(sort.IntSlice(ids)))
 	if len(ids) > indexMax {
 		ids = ids[:indexMax]

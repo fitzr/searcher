@@ -14,7 +14,7 @@ func TestCreateIndex(t *testing.T) {
 	sut := newIndexBuilder()
 
 	sut.put(123, []string{"もう", "寒い"})
-	sut.put(111, []string{"もう", "眠い"})
+	sut.put(111, []string{"もう", "眠い", "眠い"})
 
 	actual := sut.build()
 
