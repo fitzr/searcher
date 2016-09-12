@@ -16,12 +16,7 @@ func newMeCab() *mecabParser {
 		panic(err)
 	}
 
-	tagger, err := model.NewMeCab()
-	if err != nil {
-		panic(err)
-	}
-
-	return &mecabParser{model: model, tagger: tagger}
+	return &mecabParser{model: model}
 }
 
 func (m *mecabParser) destroy() {
@@ -30,10 +25,21 @@ func (m *mecabParser) destroy() {
 }
 
 func (m *mecabParser) parse(s string) []string {
-	ret, err := m.tagger.Parse(s)
+	tagger, err := m.model.NewMeCab()
 	if err != nil {
 		panic(err)
 	}
-	ret = ret[:len(ret)-2] // remove last space
+	defer tagger.Destroy()
+
+	ret, err := tagger.Parse(s)
+	if err != nil {
+		panic(err)
+	}
+	ret = strings.TrimRight(ret, "\n")
+	ret = strings.Trim(ret, " ")
+	if len(ret) == 0 {
+		return []string{}
+	}
+
 	return strings.Split(ret, " ")
 }
