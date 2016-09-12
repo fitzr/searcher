@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"sync"
-	"time"
-	"fmt"
 )
 
 type Searcher interface {
@@ -35,12 +33,6 @@ type words struct {
 }
 
 func NewSearcher(entries string, texts string) Searcher {
-	t1 := time.Now()
-	defer func() {
-		t2 := time.Now()
-		fmt.Println(t2.Sub(t1).Seconds())
-	}()
-
 	init := initializer{
 		builder:      newIndexBuilder(),
 		mecab:        newMeCab(),
@@ -95,8 +87,8 @@ func (i *initializer) readText(root string, file string) {
 
 	sc := bufio.NewScanner(fp)
 	for sc.Scan() {
-			w := i.mecab.parse(sc.Text())
-			i.wordsChannel <- words{id, w}
+		w := i.mecab.parse(sc.Text())
+		i.wordsChannel <- words{id, w}
 	}
 	defer i.wg.Done()
 }

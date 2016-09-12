@@ -18,7 +18,7 @@ func main() {
 
 	searcher := searcher.NewSearcher(entries, texts)
 
-	fmt.Print("\n\nsearch > ")
+	fmt.Println("\nsearch >")
 
 	for sc.Scan() {
 		t := sc.Text()
@@ -37,7 +37,7 @@ func main() {
 			}
 		}
 
-		fmt.Print("\n\nsearch > ")
+		fmt.Println("\n\nsearch >")
 	}
 
 	fmt.Println("quit")

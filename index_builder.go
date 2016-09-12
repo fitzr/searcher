@@ -2,8 +2,8 @@ package searcher
 
 import (
 	"bytes"
-	"sort"
 	"github.com/deckarep/golang-set"
+	"sort"
 )
 
 const indexMax = 50
