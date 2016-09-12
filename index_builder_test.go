@@ -24,3 +24,13 @@ func TestCreateIndex(t *testing.T) {
 		}
 	}
 }
+
+func TestDecodeIndex(t *testing.T) {
+	input := []byte{123 + 128, 12 + 128}
+	expected := []int{123, 111}
+
+	actual := decodeIndex(input)
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("\nexpected: %v\nactual: %v", expected, actual)
+	}
+}

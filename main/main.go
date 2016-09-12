@@ -23,7 +23,7 @@ func main() {
 	for sc.Scan() {
 		t := sc.Text()
 
-		if t == "q" {
+		if t == "" {
 			break
 		}
 

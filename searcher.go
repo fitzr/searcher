@@ -2,7 +2,6 @@ package searcher
 
 import (
 	"bufio"
-	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -16,7 +15,7 @@ type Searcher interface {
 
 type searcher struct {
 	index   map[string][]byte
-	entries *map[int]*Entry
+	entries map[int]*Entry
 }
 
 type initializer struct {
@@ -24,7 +23,7 @@ type initializer struct {
 	mecab        *mecabParser
 	wordsChannel chan words
 	wg           sync.WaitGroup
-	entries      *map[int]*Entry
+	entries      map[int]*Entry
 }
 
 type words struct {
@@ -67,7 +66,7 @@ func (i *initializer) listFiles(root string) []os.FileInfo {
 
 func (i *initializer) readEntry(entries string) {
 	i.entries = readEntries(entries)
-	for _, e := range *i.entries {
+	for _, e := range i.entries {
 		i.wordsChannel <- words{e.Id, i.mecab.parse(e.Title)}
 	}
 	defer i.wg.Done()
@@ -111,26 +110,13 @@ func (s *searcher) Search(input string) (results []*Entry) {
 		return
 	}
 
-	reader := bytes.NewReader(b)
-	id := 0
-	for {
-		i, err := Decode(reader)
-		if err != nil {
-			if err.Error() == "EOF" {
-				return
-			} else {
-				panic(err)
-			}
-		}
-		if id == 0 {
-			id = i
-		} else {
-			id -= i
-		}
-		e, ok := (*s.entries)[id]
+	ids := decodeIndex(b)
+	for _, id := range ids {
+		e, ok := s.entries[id]
 		if !ok {
-			panic("exists index without entry")
+			panic("index " + strconv.Itoa(id) + " have no entry")
 		}
 		results = append(results, e)
 	}
+	return
 }

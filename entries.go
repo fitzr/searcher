@@ -14,7 +14,7 @@ type Entry struct {
 	Title    string
 }
 
-func readEntries(filePath string) *map[int]*Entry {
+func readEntries(filePath string) map[int]*Entry {
 	fp, err := os.Open(filePath)
 	check(err)
 	defer fp.Close()
@@ -27,7 +27,7 @@ func readEntries(filePath string) *map[int]*Entry {
 	}
 	check(scanner.Err())
 
-	return &entries
+	return entries
 }
 
 func toEntry(s string) *Entry {

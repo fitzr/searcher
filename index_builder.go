@@ -57,3 +57,26 @@ func createIndex(set mapset.Set) []byte {
 
 	return buff.Bytes()
 }
+
+func decodeIndex(b []byte) (ids []int) {
+	ids = []int{}
+	reader := bytes.NewReader(b)
+	id := 0
+	for {
+		i, err := Decode(reader)
+		if err != nil {
+			if err.Error() == "EOF" {
+				return
+			} else {
+				panic(err)
+			}
+		}
+		if id == 0 {
+			id = i
+		} else {
+			id -= i
+		}
+		ids = append(ids, id)
+	}
+	return
+}
