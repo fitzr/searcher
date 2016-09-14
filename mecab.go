@@ -34,11 +34,11 @@ func (m *mecabParser) parse(s string) []string {
 	if err != nil {
 		panic(err)
 	}
-	ret = strings.TrimRight(ret, "\n")
-	ret = strings.Trim(ret, " ")
+	ret = strings.TrimSuffix(ret, "\n")
+	ret = strings.TrimSpace(ret)
 	if len(ret) == 0 {
 		return []string{}
 	}
 
-	return strings.Split(ret, " ")
+	return strings.Fields(ret)
 }
