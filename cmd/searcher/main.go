@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	entries = "./data/10000entries.txt"
-	texts   = "./data/texts/"
+	entries = "./testdata/10000entries.txt"
+	texts   = "./testdata/texts/"
 )
 
 func main() {
