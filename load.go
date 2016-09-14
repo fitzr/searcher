@@ -56,7 +56,7 @@ func (l *loader) listFiles(root string) []os.FileInfo {
 func (l *loader) readEntry(entries string) {
 	l.entries = readEntries(entries)
 	for _, e := range l.entries {
-		l.wordsChannel <- words{e.Id, l.mecab.parse(e.Title)}
+		l.wordsChannel <- words{e.ID, l.mecab.parse(e.Title)}
 	}
 	defer l.wg.Done()
 }

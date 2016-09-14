@@ -1,12 +1,13 @@
 package searcher
 
 import (
-	"github.com/shogo82148/go-mecab"
 	"strings"
+
+	"github.com/shogo82148/go-mecab"
 )
 
 type mecabParser struct {
-	model  mecab.Model
+	model mecab.Model
 }
 
 func newMeCab() *mecabParser {

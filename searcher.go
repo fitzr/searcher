@@ -4,6 +4,7 @@ import (
 	"strconv"
 )
 
+// Searcher is main object to search diaries.
 type Searcher interface {
 	Search(input string) (results []*Entry)
 }
@@ -13,11 +14,13 @@ type searcher struct {
 	index   map[string][]byte
 }
 
+// NewSearcher object.
 func NewSearcher(entriesPath string, textsPath string) Searcher {
 	entries, index := load(entriesPath, textsPath)
 	return &searcher{entries: entries, index: index}
 }
 
+// Search diaries.
 func (s *searcher) Search(input string) (results []*Entry) {
 	results = []*Entry{}
 	b, ok := s.index[input]

@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/fitzr/searcher"
 	"os"
 	"time"
+
+	"github.com/fitzr/searcher"
 )
 
 const (
@@ -39,7 +40,7 @@ func main() {
 			fmt.Println("nothing")
 		} else {
 			for _, result := range results {
-				fmt.Printf("id :%v title:%v url:%v\n", result.Id, result.Title, result.Url)
+				fmt.Printf("id :%v title:%v url:%v\n", result.ID, result.Title, result.URL)
 			}
 		}
 

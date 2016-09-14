@@ -7,6 +7,7 @@ const (
 	byteMaxLen = 8 + 1
 )
 
+// Encode int to byte array using Variable Byte Code.
 func Encode(w io.Writer, n int) error {
 	bytes := [byteMaxLen]byte{}
 	i := byteMaxLen - 1
@@ -23,6 +24,7 @@ func Encode(w io.Writer, n int) error {
 	return err
 }
 
+// Decode byte array to int using Variable Byte Code.
 func Decode(r io.Reader) (n int, err error) {
 	b := make([]byte, 1)
 	for {

@@ -43,9 +43,11 @@ func encodeIndex(ids []int) []byte {
 	}
 
 	buff := new(bytes.Buffer)
-	Encode(buff, ids[0])
+	err := Encode(buff, ids[0])
+	check(err)
 	for i := 1; i < len(ids); i++ {
-		Encode(buff, ids[i-1]-ids[i])
+		err = Encode(buff, ids[i-1]-ids[i])
+		check(err)
 	}
 
 	return buff.Bytes()
@@ -74,9 +76,8 @@ func decodeIndex(b []byte) (ids []int) {
 		if err != nil {
 			if err.Error() == "EOF" {
 				return
-			} else {
-				panic(err)
 			}
+			panic(err)
 		}
 		if id == 0 {
 			id = i
@@ -85,5 +86,4 @@ func decodeIndex(b []byte) (ids []int) {
 		}
 		ids = append(ids, id)
 	}
-	return
 }

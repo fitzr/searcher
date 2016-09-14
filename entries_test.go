@@ -7,7 +7,7 @@ import (
 
 func TestReadEntries(t *testing.T) {
 
-	expected := &Entry{Id: 15271537, Category: 5, Url: "http://strikewatches.sblo.jp/article/31222596.html", Title: "31222596.html"}
+	expected := &Entry{ID: 15271537, Category: 5, URL: "http://strikewatches.sblo.jp/article/31222596.html", Title: "31222596.html"}
 	actual := readEntries("./data/10000entries.txt")
 
 	if len(actual) != 10000 {

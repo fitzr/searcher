@@ -7,23 +7,24 @@ import (
 	"strings"
 )
 
+// Entry of diary.
 type Entry struct {
-	Id       int
+	ID       int
 	Category int
-	Url      string
+	URL      string
 	Title    string
 }
 
 func readEntries(filePath string) map[int]*Entry {
 	fp, err := os.Open(filePath)
 	check(err)
-	defer fp.Close()
+	defer func () { check(fp.Close())}()
 	scanner := bufio.NewScanner(fp)
 
 	entries := map[int]*Entry{}
 	for scanner.Scan() {
 		entry := toEntry(scanner.Text())
-		entries[entry.Id] = entry
+		entries[entry.ID] = entry
 	}
 	check(scanner.Err())
 
@@ -37,14 +38,8 @@ func toEntry(s string) *Entry {
 	category, err := strconv.Atoi(texts[1])
 	check(err)
 	return &Entry{
-		Id:       id,
+		ID:       id,
 		Category: category,
-		Url:      texts[2],
+		URL:      texts[2],
 		Title:    texts[3]}
-}
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
