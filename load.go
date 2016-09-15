@@ -47,9 +47,7 @@ func load(entriesPath string, textsPath string) (map[int]*Entry, map[string][]by
 
 func (l *loader) listFiles(root string) []os.FileInfo {
 	files, err := ioutil.ReadDir(root)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	return files
 }
 
@@ -63,14 +61,10 @@ func (l *loader) readEntry(entries string) {
 
 func (l *loader) readText(root string, file string) {
 	id, err := strconv.Atoi(file)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	data, err := ioutil.ReadFile(filepath.Join(root, file))
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	l.wordsChannel <- words{id, l.mecab.parse(string(data[:]))}
 
 	defer l.wg.Done()

@@ -12,9 +12,7 @@ type mecabParser struct {
 
 func newMeCab() *mecabParser {
 	model, err := mecab.NewModel(map[string]string{"output-format-type": "wakati"})
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	return &mecabParser{model: model}
 }
@@ -25,15 +23,11 @@ func (m *mecabParser) destroy() {
 
 func (m *mecabParser) parse(s string) []string {
 	tagger, err := m.model.NewMeCab()
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	defer tagger.Destroy()
 
 	ret, err := tagger.Parse(s)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	ret = strings.TrimSuffix(ret, "\n")
 	ret = strings.TrimSpace(ret)
 	if len(ret) == 0 {
